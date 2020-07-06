@@ -15,66 +15,35 @@
     IsBusy="{Binding IsBusy}">
     <mvvm:ViewBase.Resources>
         <ResourceDictionary>
-            <Style x:Key="HeaderTextStyle" TargetType="Label">
-                <Setter Property="TextColor" Value="DarkSlateBlue"/>
-                <Setter Property="FontSize" Value="Medium"/>
+            <Style x:Key="TextStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontSize" Value="30"/>
             </Style>
         </ResourceDictionary>
     </mvvm:ViewBase.Resources>
 
-    <pv:PancakeView>
-        <pv:PancakeView.BackgroundGradientStops>
-            <pv:GradientStopCollection>
-                <pv:GradientStop Color="white" Offset="0" />
-                <pv:GradientStop Color="MediumPurple" Offset="1" />
-            </pv:GradientStopCollection>
-        </pv:PancakeView.BackgroundGradientStops>
-        <FlexLayout Direction="Column" JustifyContent="SpaceEvenly" AlignItems="Stretch">
+    <StackLayout Margin="10">
+        
+        <Label Text="Latitude"/>
+        <Label Style="{StaticResource TextStyle}" Text="{Binding CurrentLocation.Latitude}"/>
+        <Label Text="Longitude"/>
+        <Label Style="{StaticResource TextStyle}" Text="{Binding CurrentLocation.Longitude}"/>
 
-            <Label Text="{Binding ConnectionStatus}" HorizontalTextAlignment="Center" FontSize="Medium" VerticalTextAlignment="Center" BackgroundColor="LightGreen" TextColor="White" HeightRequest="30"/>
+        <Label Text="DeviceId"/>
+        <Label Style="{StaticResource TextStyle}" Text="{Binding DeviceId}"/>
 
-            <Label Text="XamTrack IoT" FontSize="25" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" VerticalOptions="Center" TextColor="MediumPurple"/>
 
-            <pv:PancakeView VerticalOptions="Center" BackgroundColor="WhiteSmoke" BorderColor="AliceBlue" Margin="10" CornerRadius="10">
-                <StackLayout Margin="10">
-                    <FlexLayout FlexLayout.Grow="1" JustifyContent="SpaceAround"  AlignItems="Center" AlignContent="SpaceBetween">
-                        <Label Style="{StaticResource HeaderTextStyle}" Text="DeviceId"/>
-                        <Label Style="{StaticResource HeaderTextStyle}" Text="{Binding DeviceId}" />
-                    </FlexLayout>
+        <Label Text="Location"/>
+        <Label Style="{StaticResource TextStyle}" Text="{Binding City}"/>
 
-                    <Entry Text="{Binding MessageText}" Placeholder="Message Text" Margin="10" Visual="Material"/>
-                </StackLayout>
-            </pv:PancakeView>
+        <Label Text="Connection Status"/>
+        <Label Style="{StaticResource TextStyle}" Text="{Binding ConnectionStatus}"/>
 
-            <pv:PancakeView VerticalOptions="Center" BackgroundColor="WhiteSmoke" BorderColor="AliceBlue" Margin="10" CornerRadius="10">
-            <xamtrack:TrackingMapView HeightRequest="250" IsShowingUser="true" MoveToLastRegionOnLayoutChange="True"/>
-            </pv:PancakeView>
 
-            <pv:PancakeView VerticalOptions="Center" BackgroundColor="WhiteSmoke" Margin="10" CornerRadius="10" >
-                 <StackLayout Margin="0">
-                <FlexLayout Direction="Column" AlignContent="Start" JustifyContent="SpaceEvenly" AlignItems="Center" HeightRequest="80">
+        <Entry Text="{Binding MessageText}" Placeholder="Status Message"/>
 
-                    <Label Text="{Binding City}" FontSize="Medium" TextColor="DarkSlateBlue"/>
+        <Button Text="Start Tracking"/>
+    </StackLayout>
 
-                    <FlexLayout AlignContent="Start" JustifyContent="SpaceEvenly" AlignItems="Center" HeightRequest="50">
-                        <Label Style="{StaticResource HeaderTextStyle}" Text="Lat:"/>
-                        <Label Text="{Binding Path=CurrentLocation.Latitude}" FontSize="Medium" TextColor="LightSlateGray"/>
-                        <Label Style="{StaticResource HeaderTextStyle}" Text="Lon:" />
-                        <Label Text="{Binding Path=CurrentLocation.Longitude}" FontSize="Medium" TextColor="LightSlateGray"/>
-                    </FlexLayout>
-                </FlexLayout>
-                    <BoxView  IsVisible="{Binding IsBusy}" Color="DarkSlateBlue" HeightRequest="10" WidthRequest="10">
-                        <BoxView.Behaviors>
-                            <xamtrack:AnimatedProgressBehaviour />
-                        </BoxView.Behaviors>
-                    </BoxView>
 
-                    <Label Text="Last Updated" FontSize="Small" TextColor="DarkSlateBlue" HorizontalTextAlignment="Center"/>
-                    <Label Text="{Binding Path=CurrentLocation.Timestamp}" FontSize="Small" TextColor="LightSteelBlue" HorizontalTextAlignment="Center"/>
-                </StackLayout>
-            </pv:PancakeView>
-
-            <Button HeightRequest="60"  Text="{Binding TrackButtonText}" FontSize="Large" TextColor="White" BackgroundColor="Transparent" Command="{Binding ConnectCommand}"/>
-        </FlexLayout>
-    </pv:PancakeView>
 </mvvm:ViewBase>
