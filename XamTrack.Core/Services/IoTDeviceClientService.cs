@@ -20,23 +20,21 @@ namespace XamTrack.Core.Services
 
         public ConnectionStatusChangeReason LastKnownConnectionChangeReason { get; set; }
 
-        public string ConnectionStatus => LastKnownConnectionStatus.ToString();
-
-        public event EventHandler<string> ConnectionStatusChanged;
+        public event EventHandler<ConnectionStatus> ConnectionStatusChanged;
 
         public IoTDeviceClientService(IAppConfigService appConfigService, IDeviceInfoService deviceInfoService)
         {
             _appConfigService = appConfigService;
             _deviceInfoService = deviceInfoService;
 
-            LastKnownConnectionStatus = Microsoft.Azure.Devices.Client.ConnectionStatus.Disconnected;
+            LastKnownConnectionStatus = ConnectionStatus.Disconnected;
         }
 
         private void ConnectionStatusChangesHandler(ConnectionStatus status, ConnectionStatusChangeReason reason)
         {
             LastKnownConnectionStatus = status;
             LastKnownConnectionChangeReason = reason;
-            ConnectionStatusChanged?.Invoke(this, status.ToString());
+            ConnectionStatusChanged?.Invoke(this, status);
         }
 
         public async Task<bool> ConnectAsync()
@@ -45,7 +43,7 @@ namespace XamTrack.Core.Services
 
             if (string.IsNullOrEmpty(_appConfigService.AssignedEndPoint))
             {
-                await Provision();
+                await ProvisionAsync();
             }
 
             var symetricKey = IoTHelper.GenerateSymmetricKey(deviceId, _appConfigService.DpsSymetricKey);
@@ -77,16 +75,16 @@ namespace XamTrack.Core.Services
 
         public async Task SendEventAsync(string message)
         {
-            if (LastKnownConnectionStatus == Microsoft.Azure.Devices.Client.ConnectionStatus.Connected)
+            if (LastKnownConnectionStatus == ConnectionStatus.Connected)
             {
                 var msg = new Message(Encoding.ASCII.GetBytes(message));
-
                 await _deviceClient.SendEventAsync(msg);
             }
         }
         #endregion
 
-        private async Task<bool> Provision()
+
+        private async Task<bool> ProvisionAsync()
         {
             var dpsGlobalEndpoint = _appConfigService.DpsGlobalEndpoint;
             var dpsIdScope = _appConfigService.DpsIdScope;

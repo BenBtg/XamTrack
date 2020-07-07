@@ -37,12 +37,12 @@
         <Label Style="{StaticResource TextStyle}" Text="{Binding City}"/>
 
         <Label Text="Connection Status"/>
-        <Label Style="{StaticResource TextStyle}" Text="{Binding ConnectionStatus}"/>
+        <Label Style="{StaticResource TextStyle}" Text="{Binding LastKnownConnectionStatus}"/>
 
 
         <Entry Text="{Binding MessageText}" Placeholder="Status Message"/>
 
-        <Button Text="Start Tracking"/>
+        <Button Text="Start Tracking" Command="{Binding ConnectCommand}"/>
     </StackLayout>
 
 

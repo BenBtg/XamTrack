@@ -1,6 +1,4 @@
 {
   "DpsIdScope": "",
-  "IotHubConnectionString": "",
-  "DpsSymetricKey": "",
-  "SharedKey": ""
+  "DpsSymetricKey": ""
 }

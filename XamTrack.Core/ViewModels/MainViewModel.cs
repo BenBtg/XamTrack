@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -22,11 +23,11 @@ namespace XamTrack.Core.ViewModels
             set => Set(ref _messageText, value);
         }
 
-        private string _connectionStatus;
-        public string ConnectionStatus
+        private ConnectionStatus _lastKnownConnectionStatus;
+        public ConnectionStatus LastKnownConnectionStatus
         {
-            get => _connectionStatus;
-            set => Set(ref _connectionStatus, value);
+            get => _lastKnownConnectionStatus;
+            set => Set(ref _lastKnownConnectionStatus, value);
         }
 
         private string _deviceId;
@@ -69,7 +70,7 @@ namespace XamTrack.Core.ViewModels
         private ICommand _connectCommand;
         public ICommand ConnectCommand => _connectCommand = new TinyCommand(async () =>
         {
-            if (_ioTDeviceClientService.ConnectionStatus != "Connected")
+            if (_ioTDeviceClientService.LastKnownConnectionStatus != Microsoft.Azure.Devices.Client.ConnectionStatus.Connected)
             {
                 await StartTrackingAsync();
             }
@@ -99,12 +100,12 @@ namespace XamTrack.Core.ViewModels
             _ioTDeviceClientService.ConnectionStatusChanged += _ioTDeviceClientService_ConnectionStatusChanged;
 
             TrackButtonText = "Start Tracking";
-            ConnectionStatus = "Disconnected";
+            LastKnownConnectionStatus = ConnectionStatus.Disconnected;
         }
 
-        private void _ioTDeviceClientService_ConnectionStatusChanged(object sender, string e)
+        private void _ioTDeviceClientService_ConnectionStatusChanged(object sender, ConnectionStatus e)
         {
-            ConnectionStatus = e;
+            LastKnownConnectionStatus = e;
         }
 
         public async override Task OnAppearing()
@@ -118,10 +119,8 @@ namespace XamTrack.Core.ViewModels
         private async Task StartTrackingAsync()
         {
             IsBusy = true;
-            ConnectionStatus = "Connecting";
             await _ioTDeviceClientService?.ConnectAsync();
             TrackButtonText = "Stop Tracking";
-
             _messageTimer = new Timer(MessageTimerPeriod);
             _messageTimer.Elapsed += async (o,e) => await SendMesaageAsync();
             _messageTimer.AutoReset = true;
@@ -132,7 +131,6 @@ namespace XamTrack.Core.ViewModels
         {
             IsBusy = false;
             _messageTimer.Stop();
-            ConnectionStatus = "Disconnecting";
             await _ioTDeviceClientService?.DisconnectAsync();
             TrackButtonText = "Start Tracking";
         }
