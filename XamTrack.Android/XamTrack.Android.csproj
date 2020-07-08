@@ -114,6 +114,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\XamTrack.Core\XamTrack.Core.csproj">
+      <Project>{73484be8-c85e-4b8c-9a52-8bd835f8af70}</Project>
+      <Name>XamTrack.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XamTrack\XamTrack.csproj">
       <Project>{F1B0632C-C7AD-4D2B-BEE0-2D68A040BA33}</Project>
       <Name>XamTrack</Name>

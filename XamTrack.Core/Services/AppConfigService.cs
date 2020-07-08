@@ -32,9 +32,7 @@ namespace XamTrack.Core.Services
             }
         }
 
-        public string DpsGlobalEndpoint => "global.azure-devices-provisioning.net";
-
-        public string IotHubConnectionString => GetValue();
+        public string DpsGlobalEndpoint => "global.azure-devices-provisioning.net";        
 
         public string DpsIdScope => GetValue();
 
